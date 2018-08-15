@@ -27,7 +27,7 @@ If \code{r} is equal to the rank of \code{Y}, then \code{Y} is equal to
 \code{atrans(S, U)}, up to numerical accuracy.
 
 More details on the HOSVD can be found in
-\href{http://epubs.siam.org/doi/abs/10.1137/S0895479896305696}{ De Lathauwer
+\href{https://doi.org/10.1137/S0895479896305696}{ De Lathauwer
 et. al. (2000)}.
 }
 \examples{
@@ -48,14 +48,13 @@ trim(mat(S, 1) \%*\% t(mat(S, 1)))
 trim(mat(S, 2) \%*\% t(mat(S, 2)))
 trim(mat(S, 3) \%*\% t(mat(S, 3)))
 }
-\author{
-Peter Hoff.
-}
 \references{
 De Lathauwer, L., De Moor, B., & Vandewalle, J. (2000).
-  \href{http://epubs.siam.org/doi/abs/10.1137/S0895479896305696}{A
+  \href{http://doi.org/10.1137/S0895479896305696}{A
   multilinear singular value decomposition}. \emph{SIAM journal on Matrix
   Analysis and Applications}, 21(4), 1253-1278.
 }
+\author{
+Peter Hoff.
+}
 \keyword{decompositions}
-

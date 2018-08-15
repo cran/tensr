@@ -70,8 +70,8 @@ There are options to constrain the matrices in \code{L} to either be
 diagonal, lower triangular with unit diagonal, or the identity matrix. Each
 of these correspond to submodels in Kronecker structured covariance models.
 The core array corresponding to each of these options has different
-properities (see \href{http://arxiv.org/abs/1410.1094}{Gerard and Hoff
-(2014)}). These more constrained tensor decompositions are called HOLQ
+properities (see \href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff
+(2016)}). These more constrained tensor decompositions are called HOLQ
 juniors.
 
 The MLE of the \eqn{i}th component covariance matrix under \emph{any}
@@ -88,7 +88,7 @@ The algorithm used to fit the HOLQ iteratively repeats the LQ decomposition
 along each mode.
 
 For more details on the incredible HOLQ, see
-\href{http://arxiv.org/abs/1410.1094}{Gerard and Hoff (2014)}.
+\href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff (2016)}.
 }
 \examples{
 #Genrate random data.
@@ -115,13 +115,12 @@ trim(mat(Z, 2) \%*\% t(mat(Z, 2)), 10^-5)
 #Third mode has unit diagonal (up to scale).
 diag(mat(Z, 3) \%*\% t(mat(Z, 3)))
 }
-\author{
-David Gerard.
-}
 \references{
-Gerard, D. C., & Hoff, P. D. (2014).
-  \href{http://arxiv.org/abs/1410.1094}{A higher-order LQ decomposition for
-  separable covariance models}. \emph{arXiv preprint arXiv:1410.1094.}
+Gerard, D., & Hoff, P. (2016). A higher-order LQ
+    decomposition for separable covariance models.
+    \emph{Linear Algebra and its Applications}, 505, 57-84.
+    \url{https://doi.org/10.1016/j.laa.2016.04.033}
+    \url{http://arxiv.org/pdf/1410.1094v1.pdf}
 }
 \seealso{
 \code{\link{array_bic_aic}} for using the output of \code{holq} to
@@ -139,6 +138,8 @@ Gerard, D. C., & Hoff, P. D. (2014).
   calculate the maximum likelihood estimates of the component covariance
   matrices under the array normal model.
 }
+\author{
+David Gerard.
+}
 \keyword{decompositions}
 \keyword{likelihood}
-

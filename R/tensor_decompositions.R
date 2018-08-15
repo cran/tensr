@@ -8,7 +8,7 @@
 #' \code{atrans(S, U)}, up to numerical accuracy.
 #'
 #' More details on the HOSVD can be found in
-#' \href{http://epubs.siam.org/doi/abs/10.1137/S0895479896305696}{ De Lathauwer
+#' \href{https://doi.org/10.1137/S0895479896305696}{ De Lathauwer
 #' et. al. (2000)}.
 #'
 #' @param Y An array of numerics.
@@ -24,7 +24,7 @@
 #' @author Peter Hoff.
 #'
 #' @references De Lathauwer, L., De Moor, B., & Vandewalle, J. (2000).
-#'   \href{http://epubs.siam.org/doi/abs/10.1137/S0895479896305696}{A
+#'   \href{http://doi.org/10.1137/S0895479896305696}{A
 #'   multilinear singular value decomposition}. \emph{SIAM journal on Matrix
 #'   Analysis and Applications}, 21(4), 1253-1278.
 #'
@@ -111,8 +111,8 @@ hosvd <- function(Y, r = NULL) {
 #' diagonal, lower triangular with unit diagonal, or the identity matrix. Each
 #' of these correspond to submodels in Kronecker structured covariance models.
 #' The core array corresponding to each of these options has different
-#' properities (see \href{http://arxiv.org/abs/1410.1094}{Gerard and Hoff
-#' (2014)}). These more constrained tensor decompositions are called HOLQ
+#' properities (see \href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff
+#' (2016)}). These more constrained tensor decompositions are called HOLQ
 #' juniors.
 #'
 #' The MLE of the \eqn{i}th component covariance matrix under \emph{any}
@@ -129,7 +129,7 @@ hosvd <- function(Y, r = NULL) {
 #' along each mode.
 #'
 #' For more details on the incredible HOLQ, see
-#' \href{http://arxiv.org/abs/1410.1094}{Gerard and Hoff (2014)}.
+#' \href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff (2016)}.
 #'
 #' @param X An array of numerics.
 #' @param tol A numeric. The maximum difference in frobenius norm between two
@@ -178,9 +178,11 @@ hosvd <- function(Y, r = NULL) {
 #'
 #' @export
 #'
-#' @references Gerard, D. C., & Hoff, P. D. (2014).
-#'   \href{http://arxiv.org/abs/1410.1094}{A higher-order LQ decomposition for
-#'   separable covariance models}. \emph{arXiv preprint arXiv:1410.1094.}
+#' @references Gerard, D., & Hoff, P. (2016). A higher-order LQ
+#'     decomposition for separable covariance models.
+#'     \emph{Linear Algebra and its Applications}, 505, 57-84.
+#'     \url{https://doi.org/10.1016/j.laa.2016.04.033}
+#'     \url{http://arxiv.org/pdf/1410.1094v1.pdf}
 #'
 #' @author David Gerard.
 #'
@@ -352,7 +354,7 @@ holq <- function(X, tol = 10 ^ -9, itermax = 1000, mode_rep = NULL, mode_diag = 
 #' \code{i}.
 #'
 #' For more details on the IHOP, see
-#' \href{http://arxiv.org/abs/1410.1094}{Gerard and Hoff (2014)}.
+#' \href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff (2016)}.
 #'
 #' @param X An array of numerics.
 #' @param itermax An integer. The maximum number of iterations to perform during
@@ -377,9 +379,11 @@ holq <- function(X, tol = 10 ^ -9, itermax = 1000, mode_rep = NULL, mode_diag = 
 #'
 #' @keywords decompositions
 #'
-#' @references Gerard, D. C., & Hoff, P. D. (2014).
-#'   \href{http://arxiv.org/abs/1410.1094}{A higher-order LQ decomposition for
-#'   separable covariance models}. \emph{arXiv preprint arXiv:1410.1094.}
+#' @references Gerard, D., & Hoff, P. (2016). A higher-order LQ
+#'     decomposition for separable covariance models.
+#'     \emph{Linear Algebra and its Applications}, 505, 57-84.
+#'     \url{https://doi.org/10.1016/j.laa.2016.04.033}
+#'     \url{http://arxiv.org/pdf/1410.1094v1.pdf}
 #'
 #' @author David Gerard.
 #'
@@ -475,7 +479,7 @@ ihop <- function(X, itermax = 100, tol = 10 ^ -9, print_diff = TRUE, mode_rep = 
 #' \code{V} is also scaled all-orthonormal.
 #'
 #' For more details on the ISVD, see
-#' \href{http://arxiv.org/abs/1410.1094}{Gerard and Hoff (2014)}.
+#' \href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff (2016)}.
 #'
 #' @param x_holq The output from \code{\link{holq}}.
 #'
@@ -491,9 +495,11 @@ ihop <- function(X, itermax = 100, tol = 10 ^ -9, print_diff = TRUE, mode_rep = 
 #'
 #' @keywords decompositions
 #'
-#' @references Gerard, D. C., & Hoff, P. D. (2014).
-#'   \href{http://arxiv.org/abs/1410.1094}{A higher-order LQ decomposition for
-#'   separable covariance models}. \emph{arXiv preprint arXiv:1410.1094.}
+#' @references Gerard, D., & Hoff, P. (2016). A higher-order LQ
+#'     decomposition for separable covariance models.
+#'     \emph{Linear Algebra and its Applications}, 505, 57-84.
+#'     \url{https://doi.org/10.1016/j.laa.2016.04.033}
+#'     \url{http://arxiv.org/pdf/1410.1094v1.pdf}
 #'
 #' @examples
 #' #Generate random data.
@@ -549,7 +555,7 @@ get_isvd <- function(x_holq) {
 #' returns the HOSVD (see \code{\link{hosvd}}).
 #'
 #' For details on the HOOI see
-#' \href{http://epubs.siam.org/doi/abs/10.1137/S0895479898346995}{Lathauwer et
+#' \href{https://doi.org/10.1137/S0895479898346995}{Lathauwer et
 #' al (2000)}.
 #'
 #' @param X An array of numerics.
@@ -558,6 +564,8 @@ get_isvd <- function(x_holq) {
 #' @param tol A numeric. Stopping criterion.
 #' @param print_fnorm Should updates of the optimization procedure be printed?
 #'   This number should get larger during the optimizaton procedure.
+#' @param itermax The maximum number of iterations to run the optimization procedure.
+#'
 #' @return \code{G} An all-orthogonal core array.
 #'
 #'   \code{U} A vector of matrices with orthonormal columns.
@@ -569,50 +577,73 @@ get_isvd <- function(x_holq) {
 #' @keywords decompositions
 #'
 #' @references De Lathauwer, L., De Moor, B., & Vandewalle, J. (2000).
-#'   \href{http://epubs.siam.org/doi/abs/10.1137/S0895479898346995}{On the best
+#'   \href{http://doi.org/10.1137/S0895479898346995}{On the best
 #'   rank-1 and rank-(\eqn{r_1, r_2,..., r_n}) approximation of higher-order tensors}.
 #'   \emph{SIAM Journal on Matrix Analysis and Applications}, 21(4), 1324-1342.
 #'
 #' @examples
-#' #Generate random data.
+#' ## Generate random data.
 #' p <- c(2, 3, 4)
 #' X <- array(stats::rnorm(prod(p)), dim = p)
 #'
-#' #Calculate HOOI
+#' ## Calculate HOOI
 #' r <- c(2, 2, 2)
 #' hooi_x <- hooi(X, r = r)
 #' G <- hooi_x$G
 #' U <- hooi_x$U
 #'
-#' #Reconstruct the hooi approximation.
+#' ## Reconstruct the hooi approximation.
 #' X_approx <- atrans(G, U)
 #' fnorm(X - X_approx)
-hooi <- function(X, r, tol = 10 ^ -6, print_fnorm = FALSE) {
-    p <- dim(X)
-    n <- length(p)
-    U_new <- hosvd(X, r = r)$U
-    epsilon <- tol + 1  ## how far U_old is from U_new
-    while (epsilon > tol) {
-        U_old <- U_new
-        ## do svd along each mode
-        for (mode_index in 1:n) {
-            U_mult <- U_new
-            U_mult[[mode_index]] <- diag(p[mode_index])
-            Y <- atrans(X, lapply(U_mult, t))
-            U_new[[mode_index]] <- svd(mat(Y, mode_index))$u[, 1:r[mode_index]]
-        }
-
-        ## calculate how far the matrices are from one another
-        dist_current <- rep(NA, length = n)
-        for (mode_index in 1:n) {
-            dist_current[mode_index] <- fnorm(U_new[[mode_index]] - U_old[[mode_index]])
-        }
-        epsilon <- max(dist_current)
-
-        if (print_fnorm == TRUE) {
-            cat(fnorm(atrans(X, lapply(U_new, t))), "\n")
-        }
+hooi <- function(X, r, tol = 10 ^ -6, print_fnorm = FALSE, itermax = 500) {
+  p <- dim(X)
+  n <- length(p)
+  ## Check input -----------------------------------------------------
+  assertthat::are_equal(length(r), n)
+  assertthat::assert_that(all(p >= r))
+  assertthat::assert_that(all(r >= 0))
+  assertthat::assert_that(tol > 0)
+  assertthat::assert_that(itermax > 0)
+  assertthat::assert_that(is.logical(print_fnorm))
+  ## Corner case of Rank = 0 -----------------------------------------
+  if (any(r == 0)) {
+    G <- array(0, dim = p)
+    U_new <- list()
+    for (mode_index in 1:n) {
+      U_new[[mode_index]] <- matrix(0, nrow = p[mode_index], ncol = p[mode_index])
     }
-    G <- atrans(X, lapply(U_new, t))
     return(list(G = G, U = U_new))
+  }
+
+  U_new <- hosvd(X, r = r)$U
+  epsilon <- tol + 1  ## how far U_old is from U_new
+  iter_index <- 1
+  fnorm_val <- -Inf ## the fnorm
+  while (epsilon > tol & iter_index < itermax) {
+    U_old <- U_new
+    ## do svd along each mode
+    for (mode_index in 1:n) {
+      U_mult <- U_new
+      U_mult[[mode_index]] <- diag(p[mode_index])
+      Y <- atrans(X, lapply(U_mult, t))
+      U_new[[mode_index]] <- svd(mat(Y, mode_index), nu = r[mode_index], nv = 0)$u
+    }
+
+    ## calculate how far the matrices are from one another
+    dist_current <- rep(NA, length = n)
+    for (mode_index in 1:n) {
+      dist_current[mode_index] <- fnorm(U_new[[mode_index]] - U_old[[mode_index]])
+    }
+    epsilon <- max(dist_current)
+
+    if (print_fnorm == TRUE) {
+      fnorm_old <- fnorm_val
+      fnorm_val <- fnorm(atrans(X, lapply(U_new, t)))
+      assertthat::assert_that(fnorm_val >= fnorm_old)
+      cat(fnorm_val, "\n")
+    }
+    iter_index <- iter_index + 1
+  }
+  G <- atrans(X, lapply(U_new, t))
+  return(list(G = G, U = U_new))
 }

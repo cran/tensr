@@ -27,18 +27,18 @@ function is used primarily during the Gibbs updates of the inverse
 of the lower triangular Cholesky square root of the component
 covariance matrices in \code{equi_mcmc}.
 }
-\author{
-David Gerard.
-}
 \references{
-Gerard, D., & Hoff, P. (2015).
-  \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-  minimax dominators of the MLE in the array normal model}. \emph{Journal of
-  Multivariate Analysis}, 137, 32-49.
+Gerard, D., & Hoff, P. (2015). Equivariant minimax
+    dominators of the MLE in the array normal model.
+    \emph{Journal of Multivariate Analysis}, 137, 32-49.
+    \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+    \url{http://arxiv.org/pdf/1408.0424.pdf}
 }
 \seealso{
 \code{\link{equi_mcmc}}, \code{\link{rmirror_wishart}}.
 }
+\author{
+David Gerard.
+}
 \keyword{equivariance}
 \keyword{simulation}
-

@@ -35,10 +35,11 @@
 #'
 #' @author David Gerard.
 #'
-#' @references  Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'   minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references  Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 #' @examples
 #' #Generate data whose true covariance is just the identity.
@@ -100,7 +101,7 @@ convert_cov <- function(equi_mcmc_obj) {
 #'
 #' More details on multiway Stein's loss and the Bayes rules under it can be
 #' found in
-#' \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{
+#' \href{https://doi.org/10.1016/j.jmva.2015.01.020}{
 #' Gerard and Hoff (2015)}.
 #'
 #' @param psi_inv A list of arrays where \code{psi_inv[[i]][[, , j]]} is the
@@ -131,10 +132,11 @@ convert_cov <- function(equi_mcmc_obj) {
 #'
 #' @author David Gerard.
 #'
-#' @references Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'   minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 #' @examples
 #' #Generate data whose true covariance is just the identity.
@@ -258,10 +260,11 @@ random_ortho <- function(p) {
 #'
 #' @seealso \code{\link{equi_mcmc}}, \code{\link{random_ortho}}.
 #'
-#' @references Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'   minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 #' @examples
 #' # Simulate data.

@@ -25,10 +25,11 @@
 #'
 #' @keywords equivariance
 #'
-#' @references Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'    minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 #' @author David Gerard.
 sample_sig <- function(X, phi_inv) {
@@ -50,8 +51,7 @@ sample_sig <- function(X, phi_inv) {
 #' triangular Cholesky decomposition of \eqn{\Phi}. That is, \eqn{V} is lower
 #' triangular and \eqn{U} is upper triangular. For details on its applications,
 #' see
-#' \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{
-#' Gerard and Hoff (2015)}.
+#' \href{https://doi.org/10.1016/j.jmva.2015.01.020}{Gerard and Hoff (2015)}.
 #'
 #' @param nu An integer. The degrees of freedom in the mirror-Wishart.
 #' @param Phi A matrix. The scale matrix of the mirror-Wishart.
@@ -61,10 +61,11 @@ sample_sig <- function(X, phi_inv) {
 #'
 #' @export
 #'
-#' @references Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'    minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 #' @author David Gerard.
 #'
@@ -111,10 +112,11 @@ rmirror_wishart <- function(nu, Phi) {
 #'
 #' @keywords equivariance simulation
 #'
-#' @references Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'   minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 sample_right_wishart <- function(nu, V) {
     m <- nrow(V)
@@ -180,10 +182,11 @@ sample_right_wishart <- function(nu, V) {
 #'
 #' @author David Gerard.
 #'
-#' @references Gerard, D., & Hoff, P. (2015).
-#'   \href{http://www.sciencedirect.com/science/article/pii/S0047259X15000330}{Equivariant
-#'   minimax dominators of the MLE in the array normal model}. \emph{Journal of
-#'   Multivariate Analysis}, 137, 32-49.
+#' @references Gerard, D., & Hoff, P. (2015). Equivariant minimax
+#'     dominators of the MLE in the array normal model.
+#'     \emph{Journal of Multivariate Analysis}, 137, 32-49.
+#'     \url{https://doi.org/10.1016/j.jmva.2015.01.020}
+#'     \url{http://arxiv.org/pdf/1408.0424.pdf}
 #'
 #' @examples
 #' #Generate data whose true covariance is just the identity.
