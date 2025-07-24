@@ -1,87 +1,149 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="David Gerard" />
 
-<meta name="date" content="2018-08-15" />
+<meta name="date" content="2025-07-24" />
 
 <title>Likelihood Inference in Kronecker Structured Covariance Models</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
-
-<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {  }
+{ }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
 
 
 
@@ -95,9 +157,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -266,8 +325,12 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
+
+
 
 </head>
 
@@ -276,108 +339,140 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
-<h1 class="title toc-ignore">Likelihood Inference in Kronecker Structured Covariance Models</h1>
-<h4 class="author"><em>David Gerard</em></h4>
-<h4 class="date"><em>2018-08-15</em></h4>
+<h1 class="title toc-ignore">Likelihood Inference in Kronecker
+Structured Covariance Models</h1>
+<h4 class="author">David Gerard</h4>
+<h4 class="date">2025-07-24</h4>
 
 
 
 <div id="abstract" class="section level1">
 <h1>Abstract</h1>
-<p>In this vignette, I demonstrate how to calculate the MLE and run a likelihood ratio test in the mean-zero array normal model.</p>
+<p>In this vignette, I demonstrate how to calculate the MLE and run a
+likelihood ratio test in the mean-zero array normal model.</p>
 </div>
 <div id="maximum-likelihood-estimation" class="section level1">
 <h1>Maximum Likelihood Estimation</h1>
-<p>First, I simulate some data. <code>X</code> will be generated with identity covariance along all modes. <code>Y</code> will have identity covariance along the first three modes, and an AR-1(0.9) covariance along the fourth mode. <code>Z</code> will have diagonal covariance along the first two modes, and an AR-1(0.9) covariance along the third mode.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tensr)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">X &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">rnorm</span>(<span class="kw">prod</span>(p)),<span class="dt">dim =</span> p)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">cov_Y &lt;-<span class="st"> </span><span class="kw">start_ident</span>(p)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">cov_Y[[<span class="dv">4</span>]] &lt;-<span class="st"> </span><span class="fl">0.9</span><span class="op">^</span><span class="kw">abs</span>(<span class="kw">outer</span>(<span class="dv">1</span><span class="op">:</span>p[<span class="dv">4</span>],<span class="dv">1</span><span class="op">:</span>p[<span class="dv">4</span>],<span class="st">&quot;-&quot;</span>))</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">cov_Y[[<span class="dv">4</span>]] &lt;-<span class="st"> </span>cov_Y[[<span class="dv">4</span>]] <span class="op">/</span><span class="st"> </span><span class="kw">det</span>(cov_Y[[<span class="dv">4</span>]])<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>p[<span class="dv">4</span>]) <span class="co">#scale to have unit determinant.</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">Y &lt;-<span class="st"> </span><span class="kw">atrans</span>(<span class="kw">array</span>(<span class="kw">rnorm</span>(<span class="kw">prod</span>(p)),<span class="dt">dim =</span> p), <span class="kw">lapply</span>(cov_Y, mhalf))</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">cov_Z &lt;-<span class="st"> </span><span class="kw">start_ident</span>(p)</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">diag</span>(cov_Z[[<span class="dv">1</span>]]) &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>p[<span class="dv">1</span>] <span class="op">/</span><span class="st"> </span><span class="kw">prod</span>(<span class="dv">1</span><span class="op">:</span>p[<span class="dv">1</span>])<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>p[<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw">diag</span>(cov_Z[[<span class="dv">2</span>]]) &lt;-<span class="st"> </span>p[<span class="dv">2</span>]<span class="op">:</span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">prod</span>(<span class="dv">1</span><span class="op">:</span>p[<span class="dv">2</span>])<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>p[<span class="dv">2</span>])</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">cov_Z[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span class="fl">0.9</span><span class="op">^</span><span class="kw">abs</span>(<span class="kw">outer</span>(<span class="dv">1</span><span class="op">:</span>p[<span class="dv">3</span>],<span class="dv">1</span><span class="op">:</span>p[<span class="dv">3</span>],<span class="st">&quot;-&quot;</span>))</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">cov_Z[[<span class="dv">3</span>]] &lt;-<span class="st"> </span>cov_Z[[<span class="dv">3</span>]] <span class="op">/</span><span class="st"> </span><span class="kw">det</span>(cov_Z[[<span class="dv">3</span>]])<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>p[<span class="dv">3</span>])</a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">Z &lt;-<span class="st"> </span><span class="kw">atrans</span>(<span class="kw">array</span>(<span class="kw">rnorm</span>(<span class="kw">prod</span>(p)),<span class="dt">dim =</span> p), <span class="kw">lapply</span>(cov_Z, mhalf))</a></code></pre></div>
-<p>The <code>holq</code> is used to calculate the maximum likelihood estimates. Assuming we know the covariance structure of each mode, we set the the appropriate modes to have identity or diagonal covariance matrices by using the <code>mode_rep</code> or <code>mode_diag</code> options.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">holq_X &lt;-<span class="st"> </span><span class="kw">holq</span>(X,<span class="dt">mode_rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">holq_Y &lt;-<span class="st"> </span><span class="kw">holq</span>(Y,<span class="dt">mode_rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">holq_Z &lt;-<span class="st"> </span><span class="kw">holq</span>(Z,<span class="dt">mode_rep =</span> <span class="dv">4</span>, <span class="dt">mode_diag =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">mle_X &lt;-<span class="st"> </span><span class="kw">mle_from_holq</span>(holq_X)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">mle_Y &lt;-<span class="st"> </span><span class="kw">mle_from_holq</span>(holq_Y)</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">mle_Z &lt;-<span class="st"> </span><span class="kw">mle_from_holq</span>(holq_Z)</a></code></pre></div>
+<p>First, I simulate some data. <code>X</code> will be generated with
+identity covariance along all modes. <code>Y</code> will have identity
+covariance along the first three modes, and an AR-1(0.9) covariance
+along the fourth mode. <code>Z</code> will have diagonal covariance
+along the first two modes, and an AR-1(0.9) covariance along the third
+mode.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tensr)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(p)),<span class="at">dim =</span> p)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>cov_Y <span class="ot">&lt;-</span> <span class="fu">start_ident</span>(p)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>cov_Y[[<span class="dv">4</span>]] <span class="ot">&lt;-</span> <span class="fl">0.9</span><span class="sc">^</span><span class="fu">abs</span>(<span class="fu">outer</span>(<span class="dv">1</span><span class="sc">:</span>p[<span class="dv">4</span>],<span class="dv">1</span><span class="sc">:</span>p[<span class="dv">4</span>],<span class="st">&quot;-&quot;</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>cov_Y[[<span class="dv">4</span>]] <span class="ot">&lt;-</span> cov_Y[[<span class="dv">4</span>]] <span class="sc">/</span> <span class="fu">det</span>(cov_Y[[<span class="dv">4</span>]])<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p[<span class="dv">4</span>]) <span class="co">#scale to have unit determinant.</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">atrans</span>(<span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(p)),<span class="at">dim =</span> p), <span class="fu">lapply</span>(cov_Y, mhalf))</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>cov_Z <span class="ot">&lt;-</span> <span class="fu">start_ident</span>(p)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">diag</span>(cov_Z[[<span class="dv">1</span>]]) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>p[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">prod</span>(<span class="dv">1</span><span class="sc">:</span>p[<span class="dv">1</span>])<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p[<span class="dv">1</span>])</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="fu">diag</span>(cov_Z[[<span class="dv">2</span>]]) <span class="ot">&lt;-</span> p[<span class="dv">2</span>]<span class="sc">:</span><span class="dv">1</span> <span class="sc">/</span> <span class="fu">prod</span>(<span class="dv">1</span><span class="sc">:</span>p[<span class="dv">2</span>])<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p[<span class="dv">2</span>])</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>cov_Z[[<span class="dv">3</span>]] <span class="ot">&lt;-</span> <span class="fl">0.9</span><span class="sc">^</span><span class="fu">abs</span>(<span class="fu">outer</span>(<span class="dv">1</span><span class="sc">:</span>p[<span class="dv">3</span>],<span class="dv">1</span><span class="sc">:</span>p[<span class="dv">3</span>],<span class="st">&quot;-&quot;</span>))</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>cov_Z[[<span class="dv">3</span>]] <span class="ot">&lt;-</span> cov_Z[[<span class="dv">3</span>]] <span class="sc">/</span> <span class="fu">det</span>(cov_Z[[<span class="dv">3</span>]])<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p[<span class="dv">3</span>])</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">atrans</span>(<span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(p)),<span class="at">dim =</span> p), <span class="fu">lapply</span>(cov_Z, mhalf))</span></code></pre></div>
+<p>The <code>holq</code> is used to calculate the maximum likelihood
+estimates. Assuming we know the covariance structure of each mode, we
+set the the appropriate modes to have identity or diagonal covariance
+matrices by using the <code>mode_rep</code> or <code>mode_diag</code>
+options.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>holq_X <span class="ot">&lt;-</span> <span class="fu">holq</span>(X,<span class="at">mode_rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>holq_Y <span class="ot">&lt;-</span> <span class="fu">holq</span>(Y,<span class="at">mode_rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>holq_Z <span class="ot">&lt;-</span> <span class="fu">holq</span>(Z,<span class="at">mode_rep =</span> <span class="dv">4</span>, <span class="at">mode_diag =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">print_diff =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>mle_X <span class="ot">&lt;-</span> <span class="fu">mle_from_holq</span>(holq_X)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>mle_Y <span class="ot">&lt;-</span> <span class="fu">mle_from_holq</span>(holq_Y)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>mle_Z <span class="ot">&lt;-</span> <span class="fu">mle_from_holq</span>(holq_Z)</span></code></pre></div>
 <p>Estimates of the scale are pretty close to the true value of 1.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">cat</span>(<span class="st">&quot;Estimates of scale:</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="st">&quot;From X:&quot;</span>, mle_X<span class="op">$</span>sig_mle,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">    <span class="st">&quot;From Y:&quot;</span>, mle_Y<span class="op">$</span>sig_mle,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="st">&quot;From Z:&quot;</span>, mle_Z<span class="op">$</span>sig_mle,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimates of scale:</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    <span class="st">&quot;From X:&quot;</span>, mle_X<span class="sc">$</span>sig_mle,<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="st">&quot;From Y:&quot;</span>, mle_Y<span class="sc">$</span>sig_mle,<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="st">&quot;From Z:&quot;</span>, mle_Z<span class="sc">$</span>sig_mle,<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Estimates of scale:
 ##  From X: 1.005876 
 ##  From Y: 0.9890368 
 ##  From Z: 0.9900916</code></pre>
-<p>And the estimates of the covariances are pretty close to their truth. For example, when we look at the true and estimated variances of the first mode covariance in <code>Z</code>, we get</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">cat</span>(<span class="st">&quot;     True:&quot;</span>, <span class="kw">paste</span>(<span class="st">&quot;(&quot;</span>, <span class="kw">paste</span>(<span class="kw">format</span>(<span class="kw">diag</span>(cov_Z[[<span class="dv">1</span>]]), <span class="dt">digits =</span> <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">                                   <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;)&quot;</span>,<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">    <span class="st">&quot;Estimate:&quot;</span>, <span class="kw">paste</span>(<span class="st">&quot;(&quot;</span>, <span class="kw">paste</span>(<span class="kw">format</span>(<span class="kw">diag</span>(mle_Z[[<span class="dv">1</span>]][[<span class="dv">1</span>]]), <span class="dt">digits =</span> <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">                                  <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;)&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a></code></pre></div>
+<p>And the estimates of the covariances are pretty close to their truth.
+For example, when we look at the true and estimated variances of the
+first mode covariance in <code>Z</code>, we get</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;     True:&quot;</span>, <span class="fu">paste</span>(<span class="st">&quot;(&quot;</span>, <span class="fu">paste</span>(<span class="fu">format</span>(<span class="fu">diag</span>(cov_Z[[<span class="dv">1</span>]]), <span class="at">digits =</span> <span class="dv">2</span>),</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                                   <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;)&quot;</span>,<span class="at">sep =</span> <span class="st">&quot;&quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="st">&quot;Estimate:&quot;</span>, <span class="fu">paste</span>(<span class="st">&quot;(&quot;</span>, <span class="fu">paste</span>(<span class="fu">format</span>(<span class="fu">diag</span>(mle_Z[[<span class="dv">1</span>]][[<span class="dv">1</span>]]), <span class="at">digits =</span> <span class="dv">2</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                                  <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;)&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##      True: (0.22, 0.44, 0.66, 0.88, 1.10, 1.32, 1.55, 1.77, 1.99, 2.21) 
 ##  Estimate: (0.21, 0.46, 0.65, 0.89, 1.05, 1.36, 1.65, 1.72, 1.94, 2.27)</code></pre>
 </div>
 <div id="likelihood-ratio-testing" class="section level1">
 <h1>Likelihood Ratio Testing</h1>
-<p>Let’s test for all modes having the identity covariance matrix versus the first three modes having the identity covariance matrix and the fourth is unconstrained. Of course, in this situation we need not resort to tensor methods. Using <code>X</code> as our data should only reject the null 5% of the time. But for <code>Y</code> where the alternative is true, we should have more power.</p>
-<p>First, we’ll calculate the null distribution of the likelihood ratio test statistic. Then we’ll calculate these test statistics using both <code>X</code> and <code>Y</code> as our data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">null_distribution &lt;-<span class="st"> </span><span class="kw">lrt_null_dist_dim_same</span>(<span class="dt">p =</span> p, <span class="dt">null_ident =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                                            <span class="dt">alt_ident =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">itermax =</span> <span class="dv">500</span>)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">sig_k &lt;-<span class="st"> </span><span class="kw">holq</span>(X,<span class="dt">mode_rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)<span class="op">$</span>sig</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">sig_h &lt;-<span class="st"> </span><span class="kw">holq</span>(X,<span class="dt">mode_rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)<span class="op">$</span>sig</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">lrt_stat_val_X &lt;-<span class="st"> </span><span class="kw">lrt_stat</span>(<span class="dt">sig_null =</span> sig_h,<span class="dt">sig_alt =</span> sig_k,<span class="dt">p =</span> p)</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">sig_k &lt;-<span class="st"> </span><span class="kw">holq</span>(Y,<span class="dt">mode_rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)<span class="op">$</span>sig</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">sig_h &lt;-<span class="st"> </span><span class="kw">holq</span>(Y,<span class="dt">mode_rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)<span class="op">$</span>sig</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">lrt_stat_val_Y &lt;-<span class="st"> </span><span class="kw">lrt_stat</span>(<span class="dt">sig_null =</span> sig_h,<span class="dt">sig_alt =</span> sig_k,<span class="dt">p =</span> p)</a></code></pre></div>
+<p>Let’s test for all modes having the identity covariance matrix versus
+the first three modes having the identity covariance matrix and the
+fourth is unconstrained. Of course, in this situation we need not resort
+to tensor methods. Using <code>X</code> as our data should only reject
+the null 5% of the time. But for <code>Y</code> where the alternative is
+true, we should have more power.</p>
+<p>First, we’ll calculate the null distribution of the likelihood ratio
+test statistic. Then we’ll calculate these test statistics using both
+<code>X</code> and <code>Y</code> as our data.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>null_distribution <span class="ot">&lt;-</span> <span class="fu">lrt_null_dist_dim_same</span>(<span class="at">p =</span> p, <span class="at">null_ident =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                                            <span class="at">alt_ident =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">itermax =</span> <span class="dv">500</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>sig_k <span class="ot">&lt;-</span> <span class="fu">holq</span>(X,<span class="at">mode_rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>sig</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>sig_h <span class="ot">&lt;-</span> <span class="fu">holq</span>(X,<span class="at">mode_rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>sig</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>lrt_stat_val_X <span class="ot">&lt;-</span> <span class="fu">lrt_stat</span>(<span class="at">sig_null =</span> sig_h,<span class="at">sig_alt =</span> sig_k,<span class="at">p =</span> p)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>sig_k <span class="ot">&lt;-</span> <span class="fu">holq</span>(Y,<span class="at">mode_rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>sig</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>sig_h <span class="ot">&lt;-</span> <span class="fu">holq</span>(Y,<span class="at">mode_rep =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>sig</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>lrt_stat_val_Y <span class="ot">&lt;-</span> <span class="fu">lrt_stat</span>(<span class="at">sig_null =</span> sig_h,<span class="at">sig_alt =</span> sig_k,<span class="at">p =</span> p)</span></code></pre></div>
 <p>We can calculate p-values.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">p_value_x &lt;-<span class="st"> </span><span class="kw">mean</span>(null_distribution <span class="op">&gt;</span><span class="st"> </span>lrt_stat_val_X)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">p_value_y &lt;-<span class="st"> </span><span class="kw">mean</span>(null_distribution <span class="op">&gt;</span><span class="st"> </span>lrt_stat_val_Y)</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">cat</span>(<span class="st">&quot; p-value using X:&quot;</span>, p_value_x,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">    <span class="st">&quot;p-value using Y:&quot;</span>, p_value_y,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>p_value_x <span class="ot">&lt;-</span> <span class="fu">mean</span>(null_distribution <span class="sc">&gt;</span> lrt_stat_val_X)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>p_value_y <span class="ot">&lt;-</span> <span class="fu">mean</span>(null_distribution <span class="sc">&gt;</span> lrt_stat_val_Y)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot; p-value using X:&quot;</span>, p_value_x,<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="st">&quot;p-value using Y:&quot;</span>, p_value_y,<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>##  p-value using X: 0.206 
 ##  p-value using Y: 0</code></pre>
-<p>We can also plot the null distribution along with the observed statistics. If you can’t see the line for <code>Y</code>, that’s because the likelihood ratio test statistic is so large.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">2.5</span>, <span class="fl">2.5</span>, <span class="dv">2</span>, <span class="dv">0</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="fl">.5</span>, <span class="dv">0</span>))</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">hist</span>(null_distribution, <span class="dt">xlab =</span> <span class="st">&quot;LRT Stat&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Null Distribution&quot;</span>)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">abline</span>(<span class="dt">v =</span> lrt_stat_val_X, <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw">abline</span>(<span class="dt">v =</span> lrt_stat_val_Y, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;From X&quot;</span>,<span class="st">&quot;From Y&quot;</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>)</a></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>As a second example, we run a likelihood ratio test using <code>Z</code>, testing for diagional covariance along the first mode, identity covariance along the second and fourth modes, and unstructured along the third, against the correct model of diagonal along the first two modes, identity along the fourth mode, and unstructured along the third.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">null_distribution &lt;-<span class="st"> </span><span class="kw">lrt_null_dist_dim_same</span>(<span class="dt">p =</span> p,<span class="dt">null_ident =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>),</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">                                            <span class="dt">alt_ident =</span> <span class="dv">4</span>, <span class="dt">null_diag =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">                                            <span class="dt">alt_diag =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">itermax =</span> <span class="dv">500</span>)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">sig_k &lt;-<span class="st"> </span><span class="kw">holq</span>(Z, <span class="dt">mode_rep =</span> <span class="dv">4</span>, <span class="dt">mode_diag =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)<span class="op">$</span>sig</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">sig_h &lt;-<span class="st"> </span><span class="kw">holq</span>(Z, <span class="dt">mode_rep =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">mode_diag =</span> <span class="dv">1</span>, <span class="dt">print_diff =</span> <span class="ot">FALSE</span>)<span class="op">$</span>sig</a>
-<a class="sourceLine" id="cb11-7" data-line-number="7">lrt_stat_val_Z &lt;-<span class="st"> </span><span class="kw">lrt_stat</span>(<span class="dt">sig_null =</span> sig_h, <span class="dt">sig_alt =</span> sig_k, <span class="dt">p =</span> p)</a>
-<a class="sourceLine" id="cb11-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9">p_value_z &lt;-<span class="st"> </span><span class="kw">mean</span>(null_distribution <span class="op">&gt;</span><span class="st"> </span>lrt_stat_val_Z)</a></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">cat</span>(<span class="st">&quot;P-value:&quot;</span>, p_value_z,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a></code></pre></div>
+<p>We can also plot the null distribution along with the observed
+statistics. If you can’t see the line for <code>Y</code>, that’s because
+the likelihood ratio test statistic is so large.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">2.5</span>, <span class="dv">2</span>, <span class="dv">0</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, .<span class="dv">5</span>, <span class="dv">0</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">hist</span>(null_distribution, <span class="at">xlab =</span> <span class="st">&quot;LRT Stat&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Null Distribution&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> lrt_stat_val_X, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> lrt_stat_val_Y, <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;From X&quot;</span>,<span class="st">&quot;From Y&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">cex =</span> <span class="fl">0.6</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAYAAAAUg66AAAAEDmlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI2NVV1oHFUUPpu5syskzoPUpqaSDv41lLRsUtGE2uj+ZbNt3CyTbLRBkMns3Z1pJjPj/KRpKT4UQRDBqOCT4P9bwSchaqvtiy2itFCiBIMo+ND6R6HSFwnruTOzu5O4a73L3PnmnO9+595z7t4LkLgsW5beJQIsGq4t5dPis8fmxMQ6dMF90A190C0rjpUqlSYBG+PCv9rt7yDG3tf2t/f/Z+uuUEcBiN2F2Kw4yiLiZQD+FcWyXYAEQfvICddi+AnEO2ycIOISw7UAVxieD/Cyz5mRMohfRSwoqoz+xNuIB+cj9loEB3Pw2448NaitKSLLRck2q5pOI9O9g/t/tkXda8Tbg0+PszB9FN8DuPaXKnKW4YcQn1Xk3HSIry5ps8UQ/2W5aQnxIwBdu7yFcgrxPsRjVXu8HOh0qao30cArp9SZZxDfg3h1wTzKxu5E/LUxX5wKdX5SnAzmDx4A4OIqLbB69yMesE1pKojLjVdoNsfyiPi45hZmAn3uLWdpOtfQOaVmikEs7ovj8hFWpz7EV6mel0L9Xy23FMYlPYZenAx0yDB1/PX6dledmQjikjkXCxqMJS9WtfFCyH9XtSekEF+2dH+P4tzITduTygGfv58a5VCTH5PtXD7EFZiNyUDBhHnsFTBgE0SQIA9pfFtgo6cKGuhooeilaKH41eDs38Ip+f4At1Rq/sjr6NEwQqb/I/DQqsLvaFUjvAx+eWirddAJZnAj1DFJL0mSg/gcIpPkMBkhoyCSJ8lTZIxk0TpKDjXHliJzZPO50dR5ASNSnzeLvIvod0HG/mdkmOC0z8VKnzcQ2M/Yz2vKldduXjp9bleLu0ZWn7vWc+l0JGcaai10yNrUnXLP/8Jf59ewX+c3Wgz+B34Df+vbVrc16zTMVgp9um9bxEfzPU5kPqUtVWxhs6OiWTVW+gIfywB9uXi7CGcGW/zk98k/kmvJ95IfJn/j3uQ+4c5zn3Kfcd+AyF3gLnJfcl9xH3OfR2rUee80a+6vo7EK5mmXUdyfQlrYLTwoZIU9wsPCZEtP6BWGhAlhL3p2N6sTjRdduwbHsG9kq32sgBepc+xurLPW4T9URpYGJ3ym4+8zA05u44QjST8ZIoVtu3qE7fWmdn5LPdqvgcZz8Ww8BWJ8X3w0PhQ/wnCDGd+LvlHs8dRy6bLLDuKMaZ20tZrqisPJ5ONiCq8yKhYM5cCgKOu66Lsc0aYOtZdo5QCwezI4wm9J/v0X23mlZXOfBjj8Jzv3WrY5D+CsA9D7aMs2gGfjve8ArD6mePZSeCfEYt8CONWDw8FXTxrPqx/r9Vt4biXeANh8vV7/+/16ffMD1N8AuKD/A/8leAvFY9bLAAAAOGVYSWZNTQAqAAAACAABh2kABAAAAAEAAAAaAAAAAAACoAIABAAAAAEAAAEgoAMABAAAAAEAAAEgAAAAAKtAJY0AADoeSURBVHgB7V0J/FXT9l8NKs3zHJFoeqWXqRTiISopIUNJ6UXxXlGIjHmpZIzy9zySiqIyVShCg0fJ8KSnEC9JpVnReP77u97bp3Pv7557f/f+7vnd6bs+n3PvOXs+333OOmuvvfdaRRxDQiICRIAIpACBoimok1USASJABBQBMiA+CESACKQMATKglEHPiokAESAD4jNABIhAyhAgA0oZ9KyYCBABMiA+A0SACKQMATKglEHPiokAESAD4jNABIhAyhAgA0oZ9KyYCBABMiA+A0SACKQMATKglEHPiokAESAD4jNABIhAyhAgA0oR9OPGjZMzzzxTj3feeSdPKz7//HM3/oMPPsgTn5+ADRs2uGU8++yzbpYxY8a44QcPHnTDw082bdrkprNtxX+HDh2kR48eMnbsWNm9e3d4NvGrN0/CGAFo2xdffBEj1aFov3qHDh2q93HxxRcfSpzkszVr1sj27dvdUv3a4ibgyX8RwG54UuEjcP3118MKgR7HHHOM8/vvv4c04r333nPjX3755ZC4/F58//33bhnDhw93s/Xu3dsN379/vxsefrJ27Vo3nW1r+P+RRx7pvPnmmyFZ/eoNSRTjYvHixU6rVq2cK664IkbKQ9F+9f7pT3/S+6hVq9ahxEk6+/XXX53bb7/dKVWqlLN69Wq3VL+2uAl4oggU/y8b4m8qEfjmm29k1KhRctddd6WyGVHrNkxSzj33XDEMS3bt2iUffvihfPvtt/LDDz/IRRddJP/+97+lbt26Wkbp0qXlggsu0PPGjRtHLdcv8tRTT9WoRo0a+SXJE56MevMUGiMAUuDf/va3PKlS0ZY8jciAADKgNOmk+++/X8zXXvCipyP98Y9/lMcff9xt2oEDB+TOO++UkSNHKkMaMmSIvPjiixpfrVo1efXVV9204SdgYuvWrROUUbNmTcHLmihh2FO0aFEpV66cxKrXWwfqr1ChgpQtW9YbnLTz/LYFw1y0v0qVKvmq24gN8p///EeMNCclSpTIV550TkQdUJr0zp49e2TgwIExW3P55ZfrS1O9evWQtNAT4WXCMXny5JC4IC6KFSsm99xzj8swp0+fLmYYqVWZoZvblhEjRrjVQy/Sq1cvOfzww6V+/frSoEEDTXf22WcL8oA++eQTDbOZpk2bpteW+XXu3Fmvu3XrJg888IC+uHh5wQj96rVl4X/evHliho0qrYEBnXbaaSrJ2TQrVqzQ8oHjo48+aoP1HxIgwps0aaLXkPy80k/z5s2VMSAyWlt+++03+ctf/iKQDtGPVatW1fY89NBD4tXJfffdd25b3njjDZWQwdiAHRju1VdfrcxfG5OhP2RAadBx5513nrbi7bffFrzI0QiMCkOgcOUvpAmE44CEURhUvHhxOemkk7QqfJnxwoDwEtm27N27V8Pwc8kll8jzzz+v13/4wx8EB2j+/Ply1VVXCcqweTXC/Ngh3759+zQITA5lL1q0SG655RaVohDXokULNy/ivfXasiBtQIH+008/qdSFuhYuXCgnn3yybN26VZPZ+lGGrdPmt3Vb7HHtTQPGYuO85XjbgjwYnmISAsNWS5DIbrrpJunSpYsNUjwsjoi79957VVqCxIQyJ06cqGFuhgw8IQNKg07D1x1SAWjw4MGyc+fONGhV/ppQr149NyF0Qn60fv16sbN5TzzxhM5uYYZrypQp0rJlS5VKjOJWIEUYZa5bDF5WXONr7yUwk9atWwuYNmb1IJ3EIjAzMHvo3DCMsRLn5s2bBUPgeOnvf/+73HDDDW42SFeffvqpex3pBIwEDBcEaXDlypXKBDG7CIKk8/TTT+u59wfMffbs2bJx40bBDKl9XubMmeNNlnHnZEBp0GVHH3203HHHHdoSfJ3teRo0LWYTzOyPm2bbtm3uefgJhi4YtoGgL4LEM2nSJGnfvr0sX75csEzgqKOOkpIlS7rDOqTFUAN6sYoVK+IyhDBEwvAN0+yQxvJDSIshGIZtDz/8sOqNkG/BggX5yR6Spnbt2iG6GwyN0JfRCAwGhPqfeeYZgZK9bdu2AmZm6R//+Ic9df+7d+8u559/vl43a9ZMoJMDgRFnMpEBpUnv4aW0ugVIRLG+pBiueAkifyroxx9/dKuFTsePwEistAAJD8wHTAgvMYZAr732ml/WiOFgOMcff3zEOL/AMmXKSJs2bdzoww47TBo2bKjXdvjoRpqTZGOMtUKQvEAdO3Z0GTKuwbjskPTLL7/MUzeYm5fKly+vlxiSZzKRAaVJ7+FlmDBhgrYG+pxYU/Lhep5UPYjeYVesGTwoWV966SWVWiDpgPCSf/zxx6r7MOudNCw/P5Co8iv12PIggQFnL0GfAgoPR1iyMbbDJpQdqe1FihRBlNh/vfjfj1fSRJCVJr1pMvGcDCiNeg0zMlbXsWPHDrdl3i+xfYihhPQqN6FjKWxaunSpvP/++1otlNHhM3Ph7QFjxVf+lVdeEQzXsAL8uuuuc5PZaXw3wJx4790bnsgUNDCF/scSGMyqVav00g6dLL4INIsMbVL9j4WxX1ttIVhyYCWZ119/PWTGC+up7Krvpk2b5mFCkZiSLTeT/8mA0qz3oFCNtibkuOOOc1ts19pAMYl8QRJmacA4Zs2aJRPN7MuwYcPknHPOUQYBKWL8+PFRq58xY4YqTqHzwPQ9vuhQvGKa3jITr57HSiTQiWHmaMuWLSHlJyoB9O/fX7dMYNZr0KBBqtRFwbgXEBiEbQ8UvGDyYCyPPfaYeIebmtj82HbiGvE///yzjYr4j48MCLobKMHBeDDcHjBggJu+b9++7nnWnxhwSSlAwLsVI7x6o4TUrQPm4dN/M2xxk7z77ruO+Rq68WbY45iX0TH6FzfMKHQ1vd92gGRuxTDMxzELEt324SRSvWaK2jHSj9tGbOFo166dYyQODTMvvfPRRx+55RhG5abF/dqtJNG2VUSqFwXaPEYCcVCPGf44Rh/klo9wo5dy6z799NPdOMMUHWzhQBuMklzD0XZLRmpz0yIN8DBMKyIGyGMYn2N0Xm4e9J3tZ/wbRbMt2jHSmhtnmLYbjpNOnTppHNqXyUQJKA0/MRiGmZczYsswa4SvMRbRgaDUxOI8TAEXFtnFeFiIt2zZMpVoYtUNiccwTx1iQv+DLz/W4GDtDJTJkDbsmiKUhTUv3uGQXV8Tq55o8ZjuN/vWVPGN9TUgTOVjWwnuyRL0VKeccooOgzBUhLSFBZHAOZwQZqUawwgEim5M6/sRpDz0FfoYW1cwLAVVqlRJF1PGq4z3qydTwouAe2ZKY9nOQwhg1gv6C0wpe1/UQynS9wxDKgxXwFSOOOKIiFPsaD2YE3Q2uEc765Osu8KsF8rEKmQ/AiOB3gjLA2IRPgQYrmEm0EhCsZK78UZq08WFwCEXiQwoF3ud90wE0gQBDsHSpCPYDCKQiwiQAeVir/OeiUCaIEAGlCYdwWYQgVxEgAwoF3ud90wE0gQBMqA06Qg2gwjkIgJkQLnY67xnIpAmCJABpUlHsBlEIBcRIAPKxV7nPROBNEGADChNOoLNIAK5iED+zMjlIjK8ZyKQJATuu+8+9QICo2ykQwjAowm3YhzCg2cZhMDBPXvl2143S+lmDaXOHbG9iaTy1mCCBKZM8E86hADMslACOoQHzzIIgf2bt8m+dRtkd4pM0WYQVGndVOqA0rp72DgikN0IkAFld//y7ohAWiNABpTW3cPGEYHsRoAMKLv7l3dHBNIaASqh07p7CtY4mPs09poF/qgSIVguhLF0Y1M5kezMQwRiIkAGFBOizE0ATxbwQX7jjTcmdBNwS3Prrbeq3eeECmAmIhADATKgGABlejSMrVuXvvHeC9zFLFmyJN5sTJ/GCMCv/MUXX6zG820z8ZG59NJL7WWB//HhQ3lwQw0j/LD9DQcGcD8NQ/xeIgPyosHzjEGgeJWKclidGroQMWMaHaWhB3b8Kk6UNU1FS5UUHH6E/Ma6vRQrW9oviYbDgy4WRPp534BhfesXDY4bI3lwxdDcempFedbLra24Tp06cvnll8u1114rcDYJ/2eXXHJJHuaD9GRAFjX+ZxQCRUuWkIbTHsmoNvs1dsP4qbJ56ut+0RpepMRhcvTEUVLyiNp50nnz1xp6jVTqclaeNLECJk2aJM8884w6VsSqbbjJXrRokXr4MH7kVKJp06aNejGBB5BmzZrJL7/8og4jL7zwQnXy6K0DusO5c+dKr1691LGj9fjrTYNzMqBwRHhNBAoZgcOqV5ZiFcvDD7VvzcXKl/WVgGz+IsWMBFT5v/7ifAsyEXCnDR9pIAyRFixYoG6i69WrJ++99576NcPQGz7UIAWdcMIJOmzbsGGDgFHBeyz80n311VfqYw3+3OBlNpxuueUW9W/32WefhUe512RALhQ8CUcADx9cI+MLmAjBpxZcFyfqtwxKcHyVk+0TLJF7CTJP5e4dBEeiFG9+4/k14hCscePG2oT58+cr08EFhmAYUq1cuVLPjSdeTQNmBX9tIAzDwgnDNDClkSNHCtxhQ5qKNJwjAwpHjtcuApi+BxPCA5gIQVQ3Lo9dv+vxloGH/sEHH8yX59V4y2b6vAjAAyyobdu2Ytx76zkcYC5fvlydMxq30xqGn1jOF8F8oPe5+eab1Xvv3XffLbAKEE5kQOGI8DoEAcyidenSJSQsvxcrVqxQt8aJ5t+4cWN+q2K6JCKADw5cU6Pf1q9fL3fddZeULh1due2tfvr06erRdvz48RqMj8iJJ56oHyLrxtqmJwOySPCfCOQAAtDXRJoBCx9mQ2LBjBikIisZQSK15D2HLshLkHxwWALzwscoEh2SqSLFMowIpCkCsAe0+tJBsm7EE2nawsxvFqbjLfMJ6m4oAQWFLMsNFAHaAwoU3kIrnBJQoUHNiogAEQhHgAwoHBFeE4EsRgBbMY499lhdB4S1QDimTZuW1DueOHGirn72Fgqd0MKFC71Bes4hWB5IGEAEsheBwtiK0bNnT5kwYYIuZOzQoYOu5YIiul27dnmAJQPKAwkDiEDhIrDi570y64tf5aD/QmipVLqo9G9TQUoUK5KncTZ/0aJFpOcJ5aRexfhf62RuxYDiGuuIunbtqtsxHnvsMfnggw/ytBsB8bc0YjEMJAJEIFEE/m/Jdnltxe6Y2VvXLyUn1CuVJ503PxjUkPYV86TxBhTGVowmTZpInz59pHXr1jrE81vNTgbk7RmeE4EUIHDzmZWkZd2S0SWgw4tKK5MmEtn8EI46Ny0TKUlIWGFsxUCF11xzjTz33HNyxhlnhNTvvShUBoSFTdhBW7lyZXc7v7cxPCcCuYhAXTNkuvoksxk1QSpoflutXfOTjK0YKBPbNWJt2Qh8Fgya7+7du0vVqlXVbgiWeUMhVbt2bcH2/ilTptj75z8RyDcCrj2g5sflOw8T5g8B71YMbMmIdytG/mr5b6pAJaCpU6cKNOK4icGDB0v16tV1+/9vv/2mdkSWLVumO2VnzJghM2fOjKfdTJvjCGSTPaDC7MrC2Iph7wcjHb8tGDZNoAwITGfUqFEydOhQW1+e/1WrVglAQUObNm2aJ54BRIAIpAYBaxkxyNoDG4JhFy12M/fr1y9q+7EoCjtkYT2NRASIQG4hEBgDqlWrllpOW7x4cVREt2/fLjB+nqjNmaiFM5IIEIG0RiDQIVjfvn2lR48eqgfq1KmT1KhRQ2fAvDqgp556SmBzBvEkIkAEcguBQBnQ8OHDBQuSYB0NS7PDCbNhsEMybNgwKVeuXHg0r4kAEchyBAJlQMCuW7duesA+MEx8rl27ViUeTMPDrmwke8Ew4zlixIiY0H///fdquxZmH0m5hQDsAX3b62Z1y1PnjoG5dfNZdLeBMyCLFZZit2jRQg+Egcls3rw5oq8g2J6tVq2azer7D2v7X3/9tW88I7IXgUyyB7R69WqBhwhMuJAOITB27Njg94K98MILagLy6KOPVj/jVapUUR9DcPmBldGYep88ebIcf/zxbsvKlCkTdereJoTHRRIRSHcEsMTk9dej+/1K93sIon1jxowJlgHdf//9ctttt0mDBg1k9uzZ6n8IPoZgkwQ2Z+GT6Mknn5TOnTur2w8oo0lEINsQgCdSHKS8CAQ2DX/gwAF1wwFXHBBB4S8aU+7jxo1TZgTF83XXXadMadOmTRENZedtLkOIABHIJgQC0wH9+OOP6pQeO2KxIQ2zXFBIg7wrnrFc+8wzz5Tvvvsum3DlvRABIpAPBAKTgLDmB8rkd999120GzrH1At42LUFSgouPunXr2iD+EwEikCMIBMaASpUqpWt8rrrqKrnooot0DAxTHB07dpTLLrtMlXJLly5V/0Hbtm2T8847L0cg520SASJgEQhsCIYKnnjiCTXDgX1eGHZhWz92xMNK2gUXXKBtwKwYTHJAYiIRASKQWwgEyoAgBY0ePVoPL6xYkIj9X1u3btWFhH7mGr15eE4EvAi49oCaNfQG8zzDEAiUAUXDAu5ASEQgUQRoDyhR5NIrX2A6oPS6TbaGCBCBdESADCgde4VtIgI5ggAZUI50NG+TCKQjAmRA6dgrbBMRyBEEyIBypKN5m0QgHREgA0rHXmGbYiIAe0CrLx0k60Y8ETMtE6QvAimbhk9fSNiyTEAgk+wBZQKeqWojJaBUIc96iQAREDIgPgREgAikDAEyoJRBz4qJABEgA+IzQASIQMoQIANKGfSsmAgQATIgPgNEgAikDAEyoJRBz4qJABHgOiA+AxmJAO0BZWS35Wk0GVAeSBiQCQjQHlAm9FLsNnIIFhsjpiACRCAgBMiAAgKWxRIBIhAbATKg2BgxBREgAgEhQAYUELAslggQgdgIRGVA8N/16quvyr59+2KXxBREgAgQgTgRiMqAdu3apU4F69SpI4MGDZLPPvsszuKZnAgEgwDtAQWDa2GXGpUBvfbaawIf77fccossWLBA4Ern+OOPl4cfflg2btwYd1v37t2rbpl///33uPMyAxHwIuDaA/ria28wzzMMgagMCPdSs2ZNuemmm+Tzzz/Xo3PnzvLkk08KpKILL7xQ3njjDXEcx/e2Fy5cKN27d1cPqSVLltR8pUuXltq1a0ubNm3UK6pvZkYQASKQ1QjkeyHizp07Zfny5erR9IcffpBq1arJwYMHlbmceOKJMmvWLGUyXrSmTp0qPXv2lFNOOUUGDx6sbpkrVqwov/32m2zZskWWLVsm/fv3lxkzZsjMmTO9WXlOBIhADiAQlQFB+fzWW2/J5MmTBcOxAwcOCCQgMIwOHTpIsWLFZP369dKqVSsZO3asjBo1KgQyMB2EDR06NCTce7Fq1So56aSTZMWKFeo/3hvHcyJABLIbgagM6KijjpJ169ap3geM5IorrpAqVaqEIFKrVi2N37BhQ0g4GBP0RP369QsJD7849thj5bTTTpO5c+eSAYWDw2sikOUIRGVAYDiYiofiORo9++yzUrly5ZAkYEz169eXxYsXS8eOHUPivBfbt2/XYR3qIREBIpBbCERVQo8ePVqHWdDvWHr88cdV32Ov8V+jRg057LDDvEF63rdvX+nRo4cMGDBA5syZI5988omsWbNGvvrqK1m0aJE88sgj0rp1aylbtqx06tQpT34GEAEikN0IRJWAMNt1/fXXy4033ihdu3ZVJLA2CEwFM1jvvPOOFC3qz8OGDx8uTZo00TVEEyZMyIMkZsN69+4tw4YNk3LlyrnxUFJD7xSLwNAgaZGIABHITARiMiDofoYMGeLeHdYEgQFBd4NV0pYxuQnCTrp16yY4duzYodLP2rVrVeLBNHy9evXk8MMPD8shgvVCS5cuzRMeHgD9FKQnUu4hQHtA2dHnvgxo8+bNuu4HQ6dwOvLII6Vt27aycuXKmAzI5i1fvry0aNFCD0zfg3mUKFHCRof8V6hQQZ566qmQsEgX99xzT6RghuUAArQHlB2d7Dt+glIZa30w5R5OYE7//Oc/BYwoGu3fv18mTpyowzikw7T+bbfdplLLEUccIZUqVdKtHlgTRCICRCD3EPBlQEWKFNFFhn/729+UiWC9DrZlfPDBB3LllVeqzgZrgaLRrbfeKjfccIOueka622+/XdcLnXfeeVrmddddp4sb27VrJ7t3745WFOOIABHIQgR8h2C413Hjxulq5z59+oRst2jUqJHOhIWvCfLig+0Z06ZNk/Hjx+tqaFxDqY2VzyjXEja5Yr0RGFsshmbz8J8IEIHsQMBXAsLtYaUzmMa2bduUQbz88ssqsfzrX//S6fNoEPz8888qMVmmsmfPHt2CcdFFF4VkwyzWGWecwZ32IajwggjkBgJRGZCFAApkDJPAPLAjvnjxqIKTZgNjqVq1qkyaNEmvS5UqpXvCvGuKEPHLL7/ojFfjxo01HX+IABHIHQSicpJNmzbJyJEjVeqBjiZ81zsWKp511lm+aI0ZM0YwfMM+L+yIv/POO/V669ateo2ZsAcffFCV2eeee65vOYwgAuEIwB7Qt71ultLNGkqdOwaGR/M6QxCIyoCwFQO6GTCZY445RqCY9hKmy6PR1VdfrcpqMDFs17D0/PPPCw4M8S699FLdsAoJiUQE8ouAaw/ILOkgZS4CvgwI5jfmz58vL7zwgjKJRG8Rkg8ObMHALBqkHjCyunXrKlPDNg4SESACuYmALwPCcAuMonnz5klBBjNdOEhEgAgQAYuArxIaimesdn7xxRdtWv4TASJABJKKgK8EhFqgA/rrX/+qu9ebNm0q2DzqpS5dushxxx3nDeI5ESACRCDfCERlQHfccYfu13r77bcFRzhhQyoZUDgqvCYCRCC/CERlQOFWDvNbKNMRASJABPKDQFQGZAuALejvv/9eFyBigSGMj4VPydu0/CcCRIAI5BcBXyU0CgDjwRoeeLLAOiBYQ8QueGydwOZUEhFIFQKuPaDm1EGmqg+SUW9UCei+++5Ts6nYQGq9osIEB9YIwSIihmhYTEgiAoWNAO0BFTbiwdTnKwFhHRBc7Tz33HP6X98YmAeBAX300UdqivXDDz/UMP4QASJABBJBwFcCgludX3/9VSWd8IKhA4KnjCVLluhaofB4XhOBZCEABwawwpAIlSlTRmB7ipS+CPgyILhkhr3mV155Ra655pqQO4Cpjffee0/g9YJEBIJCACZ/4dYJ5mASIWwlwvOL9Wqk9ETAlwHB2wUYDEyoQhqC2Qzoe55++mm1EQRTG9zBHnyn/vvf/9aFoInUBGsGsL+dqQTvKHgG//znPyd0C/iAwvICKX0R8GVAaDLMaWAYdtddd7mmOGAsvmHDhioWY3aMFCwCsJPUvn37hJY9/PTTT2oELtgWsnQikDgCURkQviAwowE7Pl9++aV+TTAdf8IJJ/h6tEi8KcwZCQGst4Jd7kRmG2G58qabbopUbOaH7d0vpcdOkgNH1pY9V0S3TZ75N5u9dxCVAdnb5k52iwT/0wWBIjt3SdFftoscdNKlSWxHAghEZUCw5/z777/7Fgu/XKeffrpvPCOIABEgAtEQiMqAYCwMXkotwa8XtmR88cUX0rlzZ7X5bOP4TwSIABGIF4GoDAiLECMRfML3Nj7d4biQRASIABFIFAHfldDRCoSNaKwTevPNN6MlYxwRIAJEICoCCTEgbNPYuHGjwEUziQgQASKQKAJRh2ATJkxQf+7ewrEuCJIPDMxjfQqJCBABIpAoAlEZ0LBhw/IsZMM+MHi0wIpo7AcjEQEiQAQSRSAqA0p0D45fYzCjhi0dlStXFvoB80OJ4flBwClXRg5WraALEfOTnmnSE4GoDCjWOiDvLfXq1Uu9nnrDcL5w4UJ59NFHdfOq1RlhdS+U2DDxMXDgQDV+H56P10QgKgIlisvu2/pETQKDelgN/tZbb0VN5xdZpUoVXfXvF8/wgiMQlQH94Q9/kIceekj3fsE3PHzCYwp+9erV0qBBAznxxBPdFpQtW9Y9tydTp06Vnj17qk/4wYMHS/Xq1dW6IjYZbtmyRZYtWyYwdjZjxgyZOXOmzcZ/IpAUBPCczpkzR614JlIgzM0sX75cWrZsmUh25skHAlEZEHZiwy0PDJNhd7ylefPmyYUXXigjRoxQU602PPwfTGfUqFEydOjQ8Cj3GqZdTzrpJPUfD9c/JCKQLAQgAcGzS6dOnRIqEtL59u1muwcpMAQOcZWwKnbs2KGzXdhu4WU+SHb22WfrV2H27NlhuQ5dwoQHpur79et3KDDCGVz7nHbaaTJ37twIsQwiAkQgmxHwZUAlSpTQHe8LFizIc//79+8X2JqpUKFCnjgbAO8Z0PHAoFQ0whfm008/lTp16kRLxjgiQASyEAHfIRhmqaCEhjkH6H4wTCpZsqR8/fXXcu+99wokpI4dO0aFBMakevTooXogiMHYW4YZMK8OCPaFoD9KVEyO2gBGEgEikNYI+DIgtBp7wa688so8jKZJkyby6quvxtwLNnz4cEHaQYMGCRY1hhNcPWNPGdYblStXzo3GdD0UgLFozZo1UqlSpVjJGJ+NCNAeUFb0alQGBMkENnWxAx7DJAyXYJDslFNOUakoPwh069ZNcEBiAsNYu3atSjy1a9eWevXqqd3p8HKw2hq6p1iEdnExZCyUsjOe9oCyo1+jMiB7i2AUmFHAUAy6nUSs85UvX15atGihB8qFghpDMVhdDCcM0yLpnsLT5YdJhefhNREgAumDgK8SGk0M0jMqPG3cfvvt6YMEW0IEiEChIxBVAiqIZ1R4I8AaDD/CClUMya6//npNAoU1F3z5ocVwIpCdCPgyIOsZdcqUKXLBBRe4vsGsZ1RMm8Mzatu2bSMig/zTp0/X6XpMx4evlMa2DOiF3n//fc2POkhEgAjkFgK+DKignlGhx4GU06dPH4GDOcyCeZkVGA6YWKTZsdzqAt4tEchdBHx1QF7PqOHwWM+okIaiEdb9YLX0kCFD1EXurbfeGmJjOlpexhEBIpD9CPgyIK9nVOz5ghkNDJlgBwiLBuPxjDpgwABZunSpYA8ZFjTCxxiJCBABIuA7BAM0yfSM2qhRI92VDCeHJ598si487Nq1K3uACCSEAO0BJQRb2mWKyoCS7RkV1hTvv/9+HY5hCj7WEC7t0EqgQZAcv/nmmwRyMktUBPJhDyhqfkamBQJRGRBmsU499VRJtmdU7H6HobJcINhUggG2RF0YYTaRRASyFQFfBoTtEDAmNnr0aN3Lla0ABH1f2MALo26wo50IYbhKIgLZioCvEhovDrZPJNsudLYCyfsiAkQgfgR8JSDoa7CbHTvVP/vsM8FQInznOdwzN2zYMP5amYMIEAEiYBDwZUBAB9Pv0F9g+hxHOEE3RAYUjgqviQARyC8CIQwICk/sUIcxMqwDwgwOiQikJQK0B5SW3RJvo0J0QLDVU6ZMGd3jZQvatWuXeq+AkTASEUgXBKw9oGJr1qVLk9iOBBAIYUCR8mM/F9zvrFvHjo6ED8OIABFIHIGYDCjxopmTCBABIhAdATKg6PgwlggQgQARIAMKEFwWTQSIQHQEyICi48NYIkAEAkQgZBre1oMtGHCZA8K0PAg+wrA40UvYYnDOOed4g3hOBIgAEcg3AiEMCLvf4fM9nJo3bx4epNfhZlYjJmIgESACRMAHgRAGhB3bs2bN8knKYCKQPgjQHlD69EVBWhLCgApSEPMSgUJFgPaAChXuoCqjEjooZFkuESACMREgA4oJERMQASIQFAJkQEEhy3KJABGIiQAZUEyImIAIEIGgECADCgpZlksEiEBMBMiAYkLEBGmJAOwBjXxGSk55My2bx0blD4FCnYaHTSEYOYPbZhg9IxGBRBGw9oDkIL2GJIphOuQLXAKC+53u3burJ1UYuoc/eGzzqF27trRp00amTJmSDjiwDUSACKQAgUAloKlTp6prn1NOOUUGDx4s1atXl4oVK+r+si1btqilxf79+8uMGTNk5syZKbh9VkkEiEAqEQiUAYHpjBo1SoYOHep7j6tWrVJ/8StWrJCmTZv6pmMEESAC2YdAYEOw9evXy8aNG6Vfv35RUTv22GMFnlLnzp0bNR0jiQARyD4EAmNAtWrVkvr168vixYujorZ9+3b59NNPVTcUNSEjiQARyDoEAh2C9e3bV3r06KF6oE6dOkmNGjV0Bgw2hqwO6KmnnhKY9UA8iQgQgdxCIFAGBM+qTZo0Ud/yEyZMyIMsZsN69+6t3lfLlSvnxh88eFB++ukn99rvBNITp/P90GE4EUh/BAJlQLj9bt266bFjxw5Zs2aNwPcYJB5Mw9erV09gBC2csFaodevW4cF5rlFmftLlyciAjEeA9oAyvgv1BgJnQBYmSDgtWrTQw4bZfzASSEPFi/+3OZiuB6OKRffcc0+sJIzPVgRoDygrejYwJTTQgVfVa6+9VipVqiRVqlRRXdCmTZtCgNu/f79UqFCBlhhDUOEFEcgNBAKVgLAOaPLkyXL55ZdLkSJFZNq0aTJv3jyZP3++NGvWLDcQ5l1mLALQRW7evFmwpCQRglSPjyvJH4HAGNC+ffvk2WeflSeffFIwGwYaPXq0znb96U9/Uv/zRx11lH/LGEMEUowAJkLsNqJEmgJdJhgY9j6SIiMQGAOCL3kMr7zT6+iIt99+Wxcenn/++bJkyRLxzn5FbiJDiUBqEDhw4ICMHz9eWrVqlVADunbtKjt37iQDioJeYDqgmjVr6rDr3XffDakeM2CzZ8+W33//XdBB1u9YSCJeEAEikBMIBCYBYX0OpuCxD+zbb7+VAQMGuF8CrJKGHqhdu3bSvn37tAYaUtzWrVsTbqPj0FxEwuBFywh7QGMnyYEja8ueKzpES8m4NEYgMAaEe8biw169eskdd9whZ511VsianQYNGigTgoI6nQntf+GFF3QmL5F2QtIjJR8B2gNKPqapKDFQBgRHh9hkumHDBilfvnye+8Mq6U8++USmT5+etrNiUESOGzdOd+znuYF8BIDxkogAEYiMQKAMyFaJPWB+VKxYMbnsssv8ohlOBIhAFiMQmBI6izHjrREBIpAkBMiAkgQkiyECRCB+BMiA4seMOYgAEUgSAmRASQKSxRABIhA/AmRA8WPGHESACCQJgUKZBUtSW1kMEXARoD0gF4qMPiEDyujuy+HG0x5QVnQ+h2BZ0Y28CSKQmQhQAsrMfmOrMwAB7APEZuvdu3cn1NoSJUq4VkITKiADMpEBZUAnsYmZiQCcJjRu3FjgkjwR2rNnj2T7ZmYyoESeDOYhAvlE4JVXXhFYf4iXwHjg0jzbiTqgbO9h3h8RSGMEyIDSuHPYtCgIwB7QyGek5JQ3oyRiVLojwCFYuvcQ2xcRAdoDighLxgVSAsq4LmODiUD2IEAGlD19yTshAhmHABlQxnUZG0wEsgcBMqDs6UveCRHIOATIgDKuy9hgIpA9CJABZU9f8k6IQMYhQAaUcV3GBhOB7EGA64Cypy9z6k5oDyg7upsMKDv6MffugvaAsqLPs34IBu+sRYoUSfiA40QSESACwSCQ9RLQxx9/LMOGDZMLLrggIQQvvPDChPIxExEgArERKFQJaO/evQJXx4XtLx0SUNGiRRM6YkPIFEQgGATw3MJzcCIH8maCOY/AJaCFCxfKo48+Ku+9955s3rxZewrg1KxZU+rXry8DBw6UK664IpgeZKlEIEMRgD0gHIsWLUroDn7++WcZPHhwQnkLM1OgDGjq1KnSs2dP5cQAo3r16lKxYkU1U7llyxZZtmyZ9O/fX2bMmCEzZ84szPtmXUQgIxAoXjyxVxQf+YLQDz/8oAJCovXv379fnnzySX2/o7UjsbuLVqInDkxn1KhRMnToUE9o6OmqVavkpJNOkhUrVkjTpk1DI3lFBPwQgD2gsZPkwJG1Zc8VHfxSMTxBBL755ht9Lx966KGESpg9e7Z8+OGHMRlQESPmOQnVECPT+vXrpXbt2rJ161aVeqIlh4L4tNNOkyFDhmgyiI9HHXVUtCwaBy6LfO+8845vWgz/Bg0aJDDwnQhh/A3D4onmx5cItn0TzQ+92WGHHaazePG2f9++fSrGF6Ru1JmO+WuXKC2zW3SQdXt2Sacv3ooITUGxL2jfo1Hov4Lgl2he2/cRgYkjMNH6cd8PP/ywvnvRqguMAaFSMJHHH39cOnbs6NsGGO5u1qyZjBkzRi677DI3XX4U1QcOHNCXMxZI+SnLrTjsBA9xQXg08xcMv7DucC/3rd8ka3veLMVrVpUjJj/ghntPch17fKAx+ZIoFSQv6ixVqlTMqgMdgvXt21d69OiheqBOnTpJjRo1pHLlyiE6oKeeekrKli0riPdSfhrvTR/tPJllRauHcYWHQNH/eZoAk2H/Fh7uya4pUAY0fPhwadKkiYphWBAYTqVLl5bevXvrOp1y5cqFR/OaCBCBLEcgUAYE7Lp166bHjh07ZM2aNbJ27VqVeKAfqlevnhx++OFZDjFvjwgQAT8EAmdAtuLy5ctLixYt9LBh/CcCRCC3EUhcQ5XbuPHuiQARSAICgc6CJaF9KS8CCyUxTKxUqVJK2oIV5GeccUZK6t62bZsOm1u2bJmS+r///nutt75ZMR9OZX7bK+cv+k52lTpM5rRrEB6dlOtPP/1UZ3KxeDYVlMq+x/IZLD/5v//7v0BvnRJQDHixFB6dkSp6//335eDBgympHgzos88+S0ndqBQMyDKh8EbsOryEvHR2o8CYD+rDvQODVBD6HH2fKsIzn+g2kLjajIWIJH8EzjrrLGf+/Pn+CQKOMWsxHLPeKeBaIhdvXgDHLPSMHFkIoXfffbeDI1WEewcGqSD0Ofo+VYRnHs9+0EQJKC52zcREgAgkEwEyoGSiybKIABGICwEyoLjgYmIiQASSiQAZUDLRZFlEgAjEhQAZUFxwMTERIALJRIAMKJlosiwiQATiQoAMKC64mJgIEIFkIkAGlEw0WRYRIAJxIcCtGDHggu1q2CuKZfQsRjEJR8M6JAz4p4Jg1e7XX39VG06pqB91g4B/Koh9H3zfkwGl4slmnUSACCgCHIJ5HgSz7Nxz5X+a33T+JSQek8q60eog689P2flJkzi6sXMGVX9+9vsFVXd++zWI+smADPrfffed3HjjjXLEEUfocAeuhGCr2ksYDtxyyy3SsGFDHZLA0Jr1c+ZNV9Dzv/zlL2q6Nrwc7MyG/zTsyj/66KNlxIgR4UkSvu7Xr580atQoz7Fr1y63zOeee0535cOKJbyYLFiwwI0r6Mm8efPkxBNPVKsDp556qowbNy4PowuifmB47LHHRjzOP/9897aC7Pu3335bjj/+eClZsqRUq1ZN/vrXv4oXdzQiyL5/9dVX1SY76m/durVi7974/06CwN6tw3C1nCdsOjz55JOduXPnOrNmzXIaN27smJcsBJcbbrjBOeaYYxzjgcMxzhYd89A4xsCaY75cIekKcmFeasfYOHaM/7SQYswD6Rim41x++eWOeRidiRMnOoYROPfee29IukQvjGVKp0OHDs5dd90VchhvHlokNmQaHZjzxBNPOGaHuDNgwADH2GHW80TrtPmAJzZdGsbrGD9xjmEKWtcrr7xik+iG0CDqnzNnTsj94v4NA4AY7PTp08etP6i+/+qrrxzz4jvG/bdjdp47xmyxYwz3OcaWult3kH1vmJ/e69lnn+3g/IEHHnCqVq2q7bANCLLvUQe+NDlNb731lnbC0qVLXRxefPFFDTM+yzTs888/15fE+1KsXLlS04BpJYN27tzpGC8ijvGNlocB3XnnnfpgGvssblVgPnhYjMcPNyyRE6No1fswfpx8s4MhG+krJN54Mgl5SUMi47jAw2+8poTk+POf/+xcfPHFbliQ9buV/O8ELz/6AC8+KMi+HzlypDKgX3755X+1O87111/vlClTxrWAEGTft23bVp8h4z3DrX/06NGOcQPlGBfqGhY09jnPgCDBmCGY2wE4eeSRR/SlNDasNdw4Z9MvvpUINND8GPHdwdcxGXTdddfpi3jPPffkYUDGx7dzySWXhFQDSQRfakhjBSFj9ErLsQ9cuERnbHhr/MsvvxxSze233+6Y2bmQsHgvjO84LRtSkB8FWX94ne+++65KoF4THEH2vTH2pR+2//znP25Trr32Wsd4j3El6yD73hhac8DsvfT1119rn7zwwgtOYWCf8zoguHWxThBhOP+ll14SI4qqmyBriW/16tU6Pg+fiodh/Q0bNrjD2URP4FgRbqzhyjYSwUtl3bp1Q6Lq1Kmj15imLwh98cUXYr64AvdI0IfA+h/8s1n9FuoG2fpsXbj3TZs2FchYmnnxtDjUa7706sIbuhcjldpqJMj63UrMCXxomZdRzHBInV3auCD7vnPnzqp3vOaaa8TY31FHflOmTBEjBbmOKIPsezi8hNNML9nn+ccffywU7HOeAXnBNwaYxEgaaorS60bIDI8iroWBQth2mLeceM5RNvynGdE3D5Ox5YAxwp+al6yZ0I0bN3qD4z4HA4LSE66xjVSjjHfm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" /><!-- --></p>
+<p>As a second example, we run a likelihood ratio test using
+<code>Z</code>, testing for diagional covariance along the first mode,
+identity covariance along the second and fourth modes, and unstructured
+along the third, against the correct model of diagonal along the first
+two modes, identity along the fourth mode, and unstructured along the
+third.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>null_distribution <span class="ot">&lt;-</span> <span class="fu">lrt_null_dist_dim_same</span>(<span class="at">p =</span> p,<span class="at">null_ident =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>),</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>                                            <span class="at">alt_ident =</span> <span class="dv">4</span>, <span class="at">null_diag =</span> <span class="dv">1</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>                                            <span class="at">alt_diag =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">itermax =</span> <span class="dv">500</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>sig_k <span class="ot">&lt;-</span> <span class="fu">holq</span>(Z, <span class="at">mode_rep =</span> <span class="dv">4</span>, <span class="at">mode_diag =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">print_diff =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>sig</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>sig_h <span class="ot">&lt;-</span> <span class="fu">holq</span>(Z, <span class="at">mode_rep =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">mode_diag =</span> <span class="dv">1</span>, <span class="at">print_diff =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>sig</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>lrt_stat_val_Z <span class="ot">&lt;-</span> <span class="fu">lrt_stat</span>(<span class="at">sig_null =</span> sig_h, <span class="at">sig_alt =</span> sig_k, <span class="at">p =</span> p)</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>p_value_z <span class="ot">&lt;-</span> <span class="fu">mean</span>(null_distribution <span class="sc">&gt;</span> lrt_stat_val_Z)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;P-value:&quot;</span>, p_value_z,<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## P-value: 0</code></pre>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
-<p><strong>Gerard, D.</strong>, &amp; Hoff, P. (2016). A higher-order LQ decomposition for separable covariance models. <em>Linear Algebra and its Applications</em>, 505, 57-84. <a href="https://doi.org/10.1016/j.laa.2016.04.033">[Link to LAA]</a> <a href="http://arxiv.org/pdf/1410.1094v1.pdf">[Link to arXiv]</a></p>
+<p><strong>Gerard, D.</strong>, &amp; Hoff, P. (2016). A higher-order LQ
+decomposition for separable covariance models. <em>Linear Algebra and
+its Applications</em>, 505, 57-84. doi: 10.1016/j.laa.2016.04.033</p>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

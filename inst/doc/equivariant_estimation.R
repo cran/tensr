@@ -1,7 +1,7 @@
-## ---- echo = FALSE-------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 library(tensr)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 set.seed(360)
 p <- c(10, 10, 10)  #Dimension of tensor.
 n <- length(p) #Order of the tensor.
@@ -21,26 +21,26 @@ for (mode_index in 1:n) {
 ##Generate data with above covariance structure.
 X <- atrans(array(rnorm(prod(p)), dim = p), lapply(cov_list, mhalf))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mcmc_out <- equi_mcmc(X, 1000) 
 bayes_rule <- get_equi_bayes(mcmc_out$Phi_inv, mcmc_out$sigma)
 cov_umree <- bayes_rule$Sig_hat
 #Estimate of the "standard deviation" form for the total variation parameter.
 sig_umree <- bayes_rule$b 
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 tak_est <- multiway_takemura(X, ortho_max = 3, print_mcmc = TRUE)
 cov_takemura <- tak_est$B
 sig_takemura <- tak_est$b
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 holq_x <- holq(X, print_diff = FALSE)
 mle_x <- mle_from_holq(holq_x)
 cov_mle <- mle_x$cov_mle
 #The "standard deviation" form for the total variation parameter.
 sig_mle <- mle_x$sig_mle 
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 get_moment <- function(X) {
     p <- dim(X)
     n <- length(p)
@@ -59,7 +59,7 @@ moment_x <- get_moment(X)
 cov_moment <- moment_x$cov_moment
 sig_moment <- moment_x$sig_moment
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 umree_loss <- multi_stein_loss_cov(cov_umree, normalized_cov_list, sig_umree, sqrt(sig2_total))
 tak_loss <- multi_stein_loss_cov(cov_takemura, normalized_cov_list, sig_takemura, 
     sqrt(sig2_total))
@@ -74,10 +74,10 @@ cat(
     "            Moment Loss:", round(moment_loss), "\n"
    )
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 cov_post <- convert_cov(mcmc_out)   
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 par(cex.axis = 1, cex.lab = 1, cex.axis = 1, mar = c(2.4,2.6,2,0.2), mgp = c(1.5,0.5,0))
 ## trace plot of total variation parameter
 plot(cov_post[[2]], type = "l", ylab = expression(sigma^2),
@@ -103,7 +103,7 @@ for(index in 1:4){
     random_trace(cov_post, normalized_cov_list, p)
 }
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 par(cex.axis = 1, cex.lab = 1, cex.axis = 1, mar = c(2.4,2.6,2,0.2), mgp = c(1.5,0.5,0))
 quantile_list <- list()
 for (mode_index in 1:n) {
@@ -134,7 +134,7 @@ for (mode_index in 1:n) {
     abline(v = v_at, lty = 2)
 }
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 A_list <- list()
 for (mode_index in 1:n) {
     A_temp <- matrix(0, nrow = p[mode_index], ncol = p[mode_index])
@@ -145,10 +145,10 @@ for (mode_index in 1:n) {
 }
 a_scale <- 10
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 X_transformed <- a_scale * atrans(X, A_list)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mcmc_out <- equi_mcmc(X, 10000) 
 bayes_rule <- get_equi_bayes(mcmc_out$Phi_inv, mcmc_out$sigma)
 cov_x <- bayes_rule$Sig_hat
@@ -159,7 +159,7 @@ bayes_rule <- get_equi_bayes(mcmc_out$Phi_inv, mcmc_out$sigma)
 cov_x_t <- bayes_rule$Sig_hat
 sig_x_t <- bayes_rule$b
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #These two quantities should be close.
 cat("                Total Variation of transformed data:", sig_x_t, "\n",
     "Transformation of total variation of original data:", sig_x * a_scale,

@@ -4,9 +4,18 @@
 \alias{lrt_null_dist_dim_same}
 \title{Draw from null distribution of likelihood ratio test statistic.}
 \usage{
-lrt_null_dist_dim_same(p, null_ident = NULL, alt_ident = NULL,
-  null_diag = NULL, alt_diag = NULL, reference_dist = "normal",
-  t_df = NULL, itermax = 100, holq_itermax = 100, holq_tol = 10^-9)
+lrt_null_dist_dim_same(
+  p,
+  null_ident = NULL,
+  alt_ident = NULL,
+  null_diag = NULL,
+  alt_diag = NULL,
+  reference_dist = "normal",
+  t_df = NULL,
+  itermax = 100,
+  holq_itermax = 100,
+  holq_tol = 10^-9
+)
 }
 \arguments{
 \item{p}{A vector of integers. The dimensions of the array.}
@@ -101,11 +110,9 @@ mtext(side = 1, paste('P-value = ', round(p_value, digits = 2), sep = ''),
       line = 2)
 }
 \references{
-Gerard, D., & Hoff, P. (2016). A higher-order LQ
-    decomposition for separable covariance models.
-    \emph{Linear Algebra and its Applications}, 505, 57-84.
-    \url{https://doi.org/10.1016/j.laa.2016.04.033}
-    \url{http://arxiv.org/pdf/1410.1094v1.pdf}
+\itemize{
+  \item{Gerard, D., & Hoff, P. (2016). A higher-order LQ decomposition for separable covariance models. \emph{Linear Algebra and its Applications}, 505, 57-84. \doi{10.1016/j.laa.2016.04.033}}
+}
 }
 \seealso{
 \code{\link{lrt_stat}} for calculating the likelihood ratio test

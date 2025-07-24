@@ -4,9 +4,17 @@
 \alias{holq}
 \title{Calculate the incredible higher-order LQ decomposition (HOLQ).}
 \usage{
-holq(X, tol = 10^-9, itermax = 1000, mode_rep = NULL, mode_diag = NULL,
-  mode_ldu = NULL, print_diff = TRUE, start_vals = "identity",
-  use_sig = TRUE)
+holq(
+  X,
+  tol = 10^-9,
+  itermax = 1000,
+  mode_rep = NULL,
+  mode_diag = NULL,
+  mode_ldu = NULL,
+  print_diff = TRUE,
+  start_vals = "identity",
+  use_sig = TRUE
+)
 }
 \arguments{
 \item{X}{An array of numerics.}
@@ -70,9 +78,8 @@ There are options to constrain the matrices in \code{L} to either be
 diagonal, lower triangular with unit diagonal, or the identity matrix. Each
 of these correspond to submodels in Kronecker structured covariance models.
 The core array corresponding to each of these options has different
-properities (see \href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff
-(2016)}). These more constrained tensor decompositions are called HOLQ
-juniors.
+properities (see Gerard and Hoff, 2016). These more constrained tensor
+decompositions are called HOLQ juniors.
 
 The MLE of the \eqn{i}th component covariance matrix under \emph{any}
 elliptically contoured Kronecker structured covariance model is given by
@@ -87,8 +94,7 @@ implemented in \code{\link{lrt_stat}}.
 The algorithm used to fit the HOLQ iteratively repeats the LQ decomposition
 along each mode.
 
-For more details on the incredible HOLQ, see
-\href{https://doi.org/10.1016/j.laa.2016.04.033}{Gerard and Hoff (2016)}.
+For more details on the incredible HOLQ, see Gerard and Hoff (2016).
 }
 \examples{
 #Genrate random data.
@@ -116,11 +122,9 @@ trim(mat(Z, 2) \%*\% t(mat(Z, 2)), 10^-5)
 diag(mat(Z, 3) \%*\% t(mat(Z, 3)))
 }
 \references{
-Gerard, D., & Hoff, P. (2016). A higher-order LQ
-    decomposition for separable covariance models.
-    \emph{Linear Algebra and its Applications}, 505, 57-84.
-    \url{https://doi.org/10.1016/j.laa.2016.04.033}
-    \url{http://arxiv.org/pdf/1410.1094v1.pdf}
+\itemize{
+  \item {Gerard, D., & Hoff, P. (2016). A higher-order LQ decomposition for separable covariance models. \emph{Linear Algebra and its Applications}, 505, 57-84. \doi{10.1016/j.laa.2016.04.033}}
+}
 }
 \seealso{
 \code{\link{array_bic_aic}} for using the output of \code{holq} to
